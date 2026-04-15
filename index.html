@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0,
+                 viewport-fit=cover, user-scalable=no" />
+
+  <!-- PWA / Home Screen -->
+  <meta name="theme-color" content="#0f0e0c"
+        media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f5f2ed"
+        media="(prefers-color-scheme: light)" />
+  <meta name="apple-mobile-web-app-capable"            content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style"   content="black-translucent" />
+  <meta name="apple-mobile-web-app-title"              content="Focus Compass" />
+  <meta name="mobile-web-app-capable"                  content="yes" />
+  <meta name="description"
+        content="Daily clarity, habit tracking and pomodoro focus." />
+
+  <title>Focus Compass</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
+  <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=satoshi@400,500,700&display=swap"
+        rel="stylesheet" />
+  <!-- ADD after existing fontshare link: -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&display=swap"
+        rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./assets/css/base.css" />
+  <link rel="stylesheet" href="./assets/css/style.css" />
+</head>
+
+<body>
+<div id="app">
+
+  <!-- ═══════════════════════════════════════════════════════
+       HEADER
+  ══════════════════════════════════════════════════════════ -->
+  <header class="app-header" role="banner">
+
+    <div class="header-left">
+      <div class="app-title" aria-label="Focus Compass">
+        <svg width="18" height="18" viewBox="0 0 24 24"
+             fill="none" aria-hidden="true"
+             style="display:inline-block;vertical-align:-3px;margin-right:5px;">
+          <circle cx="12" cy="12" r="9"
+                  stroke="currentColor" stroke-width="1.5"/>
+          <line x1="12" y1="3"  x2="12" y2="5"
+                stroke="currentColor" stroke-width="1" opacity="0.35"/>
+          <line x1="12" y1="19" x2="12" y2="21"
+                stroke="currentColor" stroke-width="1" opacity="0.35"/>
+          <line x1="3"  y1="12" x2="5"  y2="12"
+                stroke="currentColor" stroke-width="1" opacity="0.35"/>
+          <line x1="19" y1="12" x2="21" y2="12"
+                stroke="currentColor" stroke-width="1" opacity="0.35"/>
+          <path d="M12 6 L13.6 12 L12 11 L10.4 12 Z"
+                fill="var(--color-accent)" stroke="none"/>
+          <path d="M12 18 L10.4 12 L12 13 L13.6 12 Z"
+                fill="currentColor" stroke="none" opacity="0.3"/>
+        </svg>
+        Focus<span>.</span>
+      </div>
+      <div class="header-date" id="header-date" aria-live="polite"></div>
+    </div>
+
+    <span id="header-view-title"
+          style="font-size:var(--text-sm);font-weight:600;
+                 color:var(--color-text-muted);letter-spacing:0.01em;">
+      Morning
+    </span>
+
+    <div class="header-actions">
+      <button class="btn-theme-toggle"
+              id="btn-theme-toggle"
+              aria-label="Switch to light mode">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1"  x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22"  y1="4.22"  x2="5.64"  y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1"  y1="12" x2="3"  y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/>
+          <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36"/>
+          <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+        </svg>
+      </button>
+
+      <button class="btn-icon" id="btn-settings"
+              aria-label="Settings and data">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83
+                   l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21
+                   a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0
+                   0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0
+                   0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65
+                   1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0
+                   1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0
+                   1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65
+                   0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65
+                   0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09
+                   a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+      </button>
+    </div>
+
+  </header>
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       MAIN CONTENT
+  ══════════════════════════════════════════════════════════ -->
+  <main id="main-content" role="main">
+
+
+    <!-- ─────────────────────────────────────────────────
+         VIEW 1 — MORNING SETUP
+    ──────────────────────────────────────────────────── -->
+    <section id="view-morning" class="view active"
+             aria-labelledby="morning-heading">
+
+      <div class="morning-greeting">
+        <h1 class="greeting-text" id="morning-greeting-text">Good morning.</h1>
+        <p class="greeting-sub">
+          Set your intention before the day sets it for you.
+        </p>
+      </div>
+
+      <!-- What I am avoiding -->
+      <button class="morning-field-btn" id="btn-open-avoiding"
+              aria-label="Open: What I am avoiding">
+        <div class="mfb-left">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+          </svg>
+          <div class="mfb-text">
+            <span class="mfb-label">What I am avoiding</span>
+            <span class="mfb-preview empty" id="preview-avoiding">Tap to write…</span>
+          </div>
+        </div>
+        <svg class="mfb-chevron" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+
+      <!-- Quotations & Ideas -->
+      <button class="morning-field-btn" id="btn-open-quotes"
+              aria-label="Open: Quotations and ideas">
+        <div class="mfb-left">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          <div class="mfb-text">
+            <span class="mfb-label">Quotations &amp; Ideas</span>
+            <span class="mfb-preview empty" id="preview-quotes">Tap to write…</span>
+          </div>
+        </div>
+        <svg class="mfb-chevron" width="16" height="16" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+
+      <!-- Feel & Fear -->
+      <div class="card mood-section">
+        <div class="card-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+               aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+            <line x1="9" y1="9" x2="9.01" y2="9"/>
+            <line x1="15" y1="9" x2="15.01" y2="9"/>
+          </svg>
+          Daily check-in
+        </div>
+
+        <div class="mood-row">
+          <div class="mood-header">
+            <span class="mood-label">Feel</span>
+            <span class="mood-sublabel">1 = robotic · 5 = fully alive</span>
+          </div>
+          <div class="star-row feel-row"
+               id="feel-stars"
+               role="radiogroup"
+               aria-label="How connected do you feel today?">
+          </div>
+          <p class="mood-description" id="feel-description" aria-live="polite"></p>
+        </div>
+
+        <div class="mood-row">
+          <div class="mood-header">
+            <span class="mood-label">Fear / Resistance</span>
+            <span class="mood-sublabel">1 = no hesitation · 5 = paralysed</span>
+          </div>
+          <div class="star-row fear-row"
+               id="fear-stars"
+               role="radiogroup"
+               aria-label="How much resistance are you feeling?">
+          </div>
+          <p class="mood-description" id="fear-description" aria-live="polite"></p>
+        </div>
+      </div>
+
+    </section><!-- /view-morning -->
+
+
+    <!-- ─────────────────────────────────────────────────
+         VIEW 2 — HABITS
+    ──────────────────────────────────────────────────── -->
+    <section id="view-habits" class="view" aria-labelledby="habits-heading">
+
+      <div class="section-header">
+        <div>
+          <h2 class="section-title" id="habits-heading">Habits</h2>
+          <p class="section-subtitle">Tap to check. Hold to edit.</p>
+        </div>
+      </div>
+
+      <div class="habits-progress-bar"
+           role="progressbar"
+           aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+           aria-label="Habit completion progress">
+        <div class="habits-progress-fill"
+             id="habits-progress-fill"
+             style="width:0%"></div>
+      </div>
+      <div class="habits-progress-label"
+           id="habits-progress-label"
+           aria-live="polite">
+        <span><strong>0</strong> of 0 done</span>
+        <span>0%</span>
+      </div>
+
+      <div id="habit-list"
+           class="habit-list"
+           role="list"
+           aria-label="Today's habits">
+      </div>
+
+      <div id="habits-empty" class="habits-empty hidden" role="status">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+             aria-hidden="true">
+          <rect x="3" y="5" width="6" height="6" rx="1"/>
+          <path d="M3 17h6M3 21h6M13 5h8M13 9h8M13 13h8M13 17h8M13 21h8"/>
+        </svg>
+        <p>No habits yet.<br/>Add your first one below.</p>
+      </div>
+
+      <form id="habit-add-form"
+            class="add-input-row"
+            novalidate
+            aria-label="Add a new habit">
+        <input class="input-text"
+               id="habit-add-input"
+               type="text"
+               placeholder="Add a habit…"
+               maxlength="300"
+               autocomplete="off"
+               autocorrect="off"
+               spellcheck="false"
+               aria-label="New habit name" />
+        <button class="btn-primary"
+                type="submit"
+                style="flex-shrink:0;padding-inline:var(--space-4);"
+                aria-label="Add habit">
+          <svg width="16" height="16" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round" aria-hidden="true">
+            <line x1="12" y1="5" x2="12" y2="19"/>
+            <line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Add
+        </button>
+      </form>
+
+      <div class="habits-controls" style="margin-top:var(--space-5);">
+        <button class="btn-secondary"
+                id="btn-habits-reset"
+                aria-label="Reset all habit checkboxes for today">
+          <svg width="14" height="14" viewBox="0 0 24 24"
+               fill="none" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" aria-hidden="true">
+            <polyline points="1 4 1 10 7 10"/>
+            <path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
+          </svg>
+          Reset today
+        </button>
+      </div>
+
+    </section><!-- /view-habits -->
+
+
+    <!-- ─────────────────────────────────────────────────
+         VIEW 3 — POMODORO
+    ──────────────────────────────────────────────────── -->
+    <section id="view-pomodoro" class="view" aria-labelledby="pomodoro-heading">
+
+      <div class="pomodoro-view">
+
+        <div class="pomo-phase-label"
+             id="pomo-phase-label"
+             data-phase="idle"
+             aria-live="polite">
+          Ready
+        </div>
+
+        <!-- SVG Ring -->
+        <div class="pomo-ring-wrap" role="timer" aria-label="Pomodoro timer">
+          <svg class="pomo-ring-svg" viewBox="0 0 240 240" aria-hidden="true">
+            <circle class="pomo-ring-bg"     cx="120" cy="120" r="110"/>
+            <circle class="pomo-ring-progress"
+                    id="pomo-ring-progress"
+                    cx="120" cy="120" r="110"
+                    style="stroke-dashoffset:691.15"/>
+          </svg>
+          <div class="pomo-ring-center">
+            <div class="pomo-time-display"
+                 id="pomo-time-display"
+                 aria-live="off">30:00</div>
+            <div class="pomo-session-count"
+                 id="pomo-session-count">
+              Start your first session
+            </div>
+          </div>
+        </div>
+
+        <!-- Cycle dots -->
+        <div class="pomo-dots"
+             id="pomo-dots"
+             role="status"
+             aria-label="Pomodoro cycle progress"
+             aria-live="polite">
+          <div class="pomo-dot" aria-hidden="true"></div>
+          <div class="pomo-dot" aria-hidden="true"></div>
+          <div class="pomo-dot" aria-hidden="true"></div>
+          <div class="pomo-dot" aria-hidden="true"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="pomo-controls">
+          <button class="btn-pomo-secondary"
+                  id="btn-pomo-reset"
+                  aria-label="Reset timer">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true">
+              <polyline points="1 4 1 10 7 10"/>
+              <path d="M3.51 15a9 9 0 1 0 .49-4.5"/>
+            </svg>
+          </button>
+
+          <button class="btn-pomo-main"
+                  id="btn-pomo-main"
+                  aria-label="Start timer">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <polygon points="5,3 19,12 5,21"/>
+            </svg>
+          </button>
+
+          <button class="btn-pomo-secondary"
+                  id="btn-pomo-skip"
+                  aria-label="Skip current phase">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                 stroke-width="2" stroke-linecap="round"
+                 stroke-linejoin="round" aria-hidden="true">
+              <polygon points="5 4 15 12 5 20 5 4"/>
+              <line x1="19" y1="5" x2="19" y2="19"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Stats row -->
+        <div class="pomo-stats">
+          <div class="pomo-stat-card">
+            <div class="pomo-stat-value"
+                 id="pomo-stat-pomodoros"
+                 aria-label="Pomodoros completed today">0</div>
+            <div class="pomo-stat-label">Pomodoros</div>
+          </div>
+          <div class="pomo-stat-card">
+            <div class="pomo-stat-value"
+                 id="pomo-stat-hours"
+                 aria-label="Hours focused today">0.0</div>
+            <div class="pomo-stat-label">Hours</div>
+          </div>
+          <div class="pomo-stat-card">
+            <div class="pomo-stat-value"
+                 id="pomo-stat-goal-pct"
+                 aria-label="Daily goal percentage">0%</div>
+            <div class="pomo-stat-label">Goal</div>
+          </div>
+        </div>
+
+        <!-- Daily goal bar -->
+        <div class="pomo-goal-wrap">
+          <div class="pomo-goal-header">
+            <span>Daily goal (7h)</span>
+            <span id="pomo-goal-header-val" aria-live="polite">
+              0h / 7h (0 pomodoros)
+            </span>
+          </div>
+          <div class="pomo-goal-bar"
+               role="progressbar"
+               aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+               aria-label="Daily focus goal progress">
+            <div class="pomo-goal-fill"
+                 id="pomo-goal-fill"
+                 style="width:0%"></div>
+          </div>
+        </div>
+
+      </div>
+    </section><!-- /view-pomodoro -->
+
+
+    <!-- ─────────────────────────────────────────────────
+         VIEW 4 — END-OF-DAY REVIEW
+    ──────────────────────────────────────────────────── -->
+    <section id="view-review" class="view" aria-labelledby="review-heading">
+
+      <div class="section-header">
+        <div>
+          <h2 class="section-title" id="review-heading">Review</h2>
+          <p class="section-subtitle">How did today go?</p>
+        </div>
+      </div>
+
+      <!-- Date badge -->
+      <div class="review-date-badge" id="review-date-badge"
+           aria-live="polite">
+        Wednesday, April 15
+      </div>
+
+      <!-- Momentum message -->
+      <div class="card"
+           style="margin-bottom:var(--space-4);
+                  background:var(--color-accent-muted);
+                  border-color:color-mix(in oklch,
+                    var(--color-accent) 25%, transparent);">
+        <p id="review-momentum"
+           style="font-size:var(--text-sm);
+                  color:var(--color-text);
+                  line-height:1.7;
+                  font-style:italic;">
+          Complete some tasks to see your momentum summary.
+        </p>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="review-stats">
+        <div class="review-stat">
+          <div class="review-stat-value"
+               id="review-stat-pomos"
+               style="color:var(--color-accent);">0</div>
+          <div class="review-stat-label">Pomodoros</div>
+        </div>
+        <div class="review-stat">
+          <div class="review-stat-value"
+               id="review-stat-hours"
+               style="color:var(--color-accent);">0h</div>
+          <div class="review-stat-label">Hours</div>
+        </div>
+        <div class="review-stat">
+          <div class="review-stat-value"
+               id="review-stat-goal-pct"
+               style="color:var(--color-success);">0%</div>
+          <div class="review-stat-label">Goal</div>
+        </div>
+        <div class="review-stat">
+          <div class="review-stat-value"
+               id="review-stat-habits"
+               style="color:var(--color-success);">0/0</div>
+          <div class="review-stat-label">Habits</div>
+        </div>
+      </div>
+
+      <!-- Feel & Fear badges -->
+      <div class="mood-badges" style="margin-bottom:var(--space-4);">
+        <div class="mood-badge">
+          <div class="mood-badge-value feel" id="review-feel-value">—</div>
+          <div class="mood-badge-label">Feel</div>
+          <div style="font-size:var(--text-xs);
+                      color:var(--color-text-faint);
+                      margin-top:var(--space-1);"
+               id="review-feel-desc">Not rated</div>
+        </div>
+        <div class="mood-badge">
+          <div class="mood-badge-value fear" id="review-fear-value">—</div>
+          <div class="mood-badge-label">Fear</div>
+          <div style="font-size:var(--text-xs);
+                      color:var(--color-text-faint);
+                      margin-top:var(--space-1);"
+               id="review-fear-desc">Not rated</div>
+        </div>
+      </div>
+
+      <!-- Today's habits (read-only) -->
+      <div class="card" style="margin-bottom:var(--space-4);">
+        <div class="card-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round"
+               stroke-linejoin="round" aria-hidden="true">
+            <polyline points="9 11 12 14 22 4"/>
+            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5
+                     a2 2 0 0 1 2-2h11"/>
+          </svg>
+          Today's habits
+        </div>
+        <div id="review-habit-list" aria-label="Today's habit completion">
+          <!-- Injected by ui.js renderReview() -->
+        </div>
+      </div>
+
+      <!-- What I was avoiding -->
+      <!-- Stoic thought of the day -->
+      <div class="stoic-card" id="stoic-card">
+        <div class="stoic-discipline-badge" id="stoic-discipline-badge">
+          ◈ Discipline of Desire
+        </div>
+        <p class="stoic-thought-text" id="stoic-thought-text">
+          Loading today's thought…
+        </p>
+        <div class="stoic-source" id="stoic-source">— Marcus Aurelius</div>
+      </div>
+
+      <!-- Quotes & Ideas -->
+      <!-- Discipline selector -->
+      <div class="card" style="margin-bottom:var(--space-6);">
+        <div class="card-label">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+              aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 8v4l3 3"/>
+          </svg>
+          Focus discipline
+        </div>
+        <div class="discipline-tabs" role="group" aria-label="Choose Stoic discipline">
+          <button class="discipline-tab active" data-discipline="desire">Desire</button>
+          <button class="discipline-tab" data-discipline="action">Action</button>
+          <button class="discipline-tab" data-discipline="assent">Assent</button>
+        </div>
+        <p class="discipline-desc" id="discipline-desc"
+          style="font-size:var(--text-xs);color:var(--color-text-muted);
+                  margin-top:var(--space-3);line-height:1.6;">
+          What you want and fear — learning to desire only what is truly in your control.
+        </p>
+      </div>
+
+    </section><!-- /view-review -->
+
+
+    <!-- ─────────────────────────────────────────────────
+         VIEW 5 — DASHBOARD
+    ──────────────────────────────────────────────────── -->
+    <section id="view-dashboard" class="view"
+             aria-labelledby="dashboard-heading">
+
+      <div class="section-header">
+        <div>
+          <h2 class="section-title" id="dashboard-heading">Dashboard</h2>
+          <p class="section-subtitle">Your performance over time.</p>
+        </div>
+      </div>
+
+      <!-- Range tabs -->
+      <div class="range-tabs" role="tablist" aria-label="Date range filter">
+        <button class="range-tab active"
+                role="tab"
+                data-days="7"
+                aria-selected="true"
+                aria-label="Last 7 days">7D</button>
+        <button class="range-tab"
+                role="tab"
+                data-days="30"
+                aria-selected="false"
+                aria-label="Last 30 days">30D</button>
+        <button class="range-tab"
+                role="tab"
+                data-days="90"
+                aria-selected="false"
+                aria-label="Last 3 months">3M</button>
+        <button class="range-tab"
+                role="tab"
+                data-days="365"
+                aria-selected="false"
+                aria-label="Last year">Year</button>
+      </div>
+
+      <!-- KPI row -->
+      <div class="kpi-row" aria-label="Key performance indicators">
+        <div class="kpi-card">
+          <div class="kpi-value"
+               id="kpi-total-pomos"
+               style="color:var(--color-accent);">—</div>
+          <div class="kpi-label">Pomodoros</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value"
+               id="kpi-total-hours"
+               style="color:var(--color-accent);">—</div>
+          <div class="kpi-label">Hours</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value"
+               id="kpi-days-on-goal"
+               style="color:var(--color-success);">—</div>
+          <div class="kpi-label">On Goal</div>
+        </div>
+      </div>
+
+      <div class="kpi-row" style="margin-top:0;">
+        <div class="kpi-card">
+          <div class="kpi-value"
+               id="kpi-avg-feel"
+               style="color:var(--color-accent);">—</div>
+          <div class="kpi-label">Avg Feel</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value"
+               id="kpi-avg-fear"
+               style="color:var(--color-danger);">—</div>
+          <div class="kpi-label">Avg Fear</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value"
+               id="kpi-days-tracked"
+               style="color:var(--color-text-muted);">—</div>
+          <div class="kpi-label">Days</div>
+        </div>
+      </div>
+
+      <!-- Pomodoro bar chart -->
+      <div class="chart-section">
+        <div class="chart-title">Focus History</div>
+        <div class="chart-wrap" id="chart-pomodoro-wrap">
+          <canvas id="chart-pomodoro"
+                  height="180"
+                  aria-label="Pomodoro history chart"
+                  role="img"></canvas>
+        </div>
+      </div>
+
+      <!-- Mood trend chart -->
+      <div class="chart-section">
+        <div class="chart-title">Feel &amp; Fear Trends</div>
+        <div class="chart-wrap" id="chart-mood-wrap">
+          <canvas id="chart-mood"
+                  height="180"
+                  aria-label="Feel and Fear trend chart"
+                  role="img"></canvas>
+        </div>
+      </div>
+
+      <!-- Habit completion rates -->
+      <div class="chart-section">
+        <div class="chart-title">Habit Completion Rates</div>
+        <div class="card">
+          <div id="habit-stats-list"
+               aria-label="Habit completion statistics">
+            <p style="color:var(--color-text-faint);
+                      font-size:var(--text-sm);
+                      text-align:center;
+                      padding:var(--space-8) 0;">
+              No history yet — check back after your first day.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Streaks -->
+      <div class="chart-section">
+        <div class="chart-title">Current Streaks 🔥</div>
+        <div class="card">
+          <div id="streak-list"
+               aria-label="Habit streaks">
+            <p style="color:var(--color-text-faint);
+                      font-size:var(--text-sm);
+                      text-align:center;
+                      padding:var(--space-8) 0;">
+              Build your first streak — start checking habits daily.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </section><!-- /view-dashboard -->
+
+
+  </main><!-- /main-content -->
+
+
+  <!-- ═══════════════════════════════════════════════════════
+       BOTTOM NAVIGATION
+  ══════════════════════════════════════════════════════════ -->
+  <nav class="bottom-nav" role="navigation" aria-label="Main navigation">
+
+    <button class="nav-item active"
+            data-view="morning"
+            aria-label="Morning setup"
+            aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <circle cx="12" cy="12" r="5"/>
+        <line x1="12" y1="1"  x2="12" y2="3"/>
+        <line x1="12" y1="21" x2="12" y2="23"/>
+        <line x1="4.22"  y1="4.22"  x2="5.64"  y2="5.64"/>
+        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+        <line x1="1"  y1="12" x2="3"  y2="12"/>
+        <line x1="21" y1="12" x2="23" y2="12"/>
+        <line x1="4.22"  y1="19.78" x2="5.64"  y2="18.36"/>
+        <line x1="18.36" y1="5.64"  x2="19.78" y2="4.22"/>
+      </svg>
+      <span>Morning</span>
+    </button>
+
+    <button class="nav-item"
+            data-view="habits"
+            aria-label="Habits tracker">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <polyline points="9 11 12 14 22 4"/>
+        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5
+                 a2 2 0 0 1 2-2h11"/>
+      </svg>
+      <span>Habits</span>
+    </button>
+
+    <button class="nav-item"
+            data-view="pomodoro"
+            aria-label="Pomodoro timer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <span>Focus</span>
+    </button>
+
+    <button class="nav-item"
+            data-view="review"
+            aria-label="End of day review">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12
+                 a2 2 0 0 0 2-2V8z"/>
+        <polyline points="14 2 14 8 20 8"/>
+        <line x1="16" y1="13" x2="8" y2="13"/>
+        <line x1="16" y1="17" x2="8" y2="17"/>
+        <polyline points="10 9 9 9 8 9"/>
+      </svg>
+      <span>Review</span>
+    </button>
+
+    <button class="nav-item"
+            data-view="dashboard"
+            aria-label="Performance dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-linecap="round" stroke-linejoin="round"
+           aria-hidden="true">
+        <line x1="18" y1="20" x2="18" y2="10"/>
+        <line x1="12" y1="20" x2="12" y2="4"/>
+        <line x1="6"  y1="20" x2="6"  y2="14"/>
+      </svg>
+      <span>Stats</span>
+    </button>
+
+  </nav>
+
+</div><!-- /#app -->
+
+
+<!-- ═══════════════════════════════════════════════════════
+     SCRIPTS — strict load order (DO NOT reorder)
+     1. storage   — no deps
+     2. habits    — needs Storage
+     3. pomodoro  — needs Storage
+     4. dashboard — needs Storage
+     5. ui        — needs all above
+     6. app       — boots everything
+══════════════════════════════════════════════════════════ -->
+<!-- Chart.js — loaded before dashboard.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"
+        defer></script>
+
+<script src="./assets/js/storage.js"   defer></script>
+<script src="./assets/js/habits.js"    defer></script>
+<script src="./assets/js/pomodoro.js"  defer></script>
+<script src="./assets/js/dashboard.js" defer></script>
+<script src="./assets/js/stoic.js"     defer></script>
+<script src="./assets/js/ui.js"        defer></script>
+<script src="./assets/js/app.js"       defer></script>
+
+</body>
+</html>

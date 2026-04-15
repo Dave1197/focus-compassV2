@@ -1,0 +1,407 @@
+/* assets/css/base.css */
+/* ═══════════════════════════════════════════════════════════
+   FOCUS COMPASS — BASE STYLESHEET
+   Theme: Ember Focus
+   Philosophy: Warm dark by default. Minimal color, maximum
+   clarity. Amber accent draws the eye only to what matters.
+   ═══════════════════════════════════════════════════════════ */
+
+
+/* ─────────────────────────────────────────────────────────
+   FONTS
+   Cabinet Grotesk (display) + Satoshi (body)
+   Both from Fontshare — less overexposed than Google Fonts
+   ───────────────────────────────────────────────────────── */
+@import url('https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&f[]=satoshi@400,500,700&display=swap');
+
+
+/* ─────────────────────────────────────────────────────────
+   DESIGN TOKENS — DARK MODE (DEFAULT)
+   ───────────────────────────────────────────────────────── */
+:root,
+[data-theme="dark"] {
+
+  /* ── Surfaces ────────────────────────────────── */
+  --color-bg:              #0f0e0c;   /* near-black warm — OLED-friendly */
+  --color-surface:         #171613;   /* cards, panels */
+  --color-surface-2:       #1e1c18;   /* nested surfaces */
+  --color-surface-offset:  #252319;   /* hover states, selected rows */
+  --color-surface-dynamic: #2e2b24;   /* active / pressed */
+  --color-divider:         #2a2823;
+  --color-border:          #333028;
+
+  /* ── Text ────────────────────────────────────── */
+  --color-text:            #e8e4dc;   /* warm off-white — not pure white */
+  --color-text-muted:      #9e9a90;   /* secondary info */
+  --color-text-faint:      #5a5750;   /* disabled, placeholders */
+  --color-text-inverse:    #0f0e0c;   /* text on amber buttons */
+
+  /* ── Accent — Amber Gold (primary CTA, progress) */
+  --color-accent:          #e8a020;   /* focus-enhancing warm amber */
+  --color-accent-hover:    #f0b030;
+  --color-accent-active:   #d08010;
+  --color-accent-muted:    #3d2f0e;   /* amber tinted surface */
+  --color-accent-text:     #0f0e0c;   /* text ON amber background */
+
+  /* ── Success — Teal (habits checked, done states) */
+  --color-success:         #3d9e8c;
+  --color-success-hover:   #4ab5a1;
+  --color-success-muted:   #0e2e29;
+
+  /* ── Danger — Muted Coral (fear bar, warnings) */
+  --color-danger:          #d4664a;
+  --color-danger-hover:    #e07560;
+  --color-danger-muted:    #2e1510;
+
+  /* ── Feel / Mood — Soft Blue-Purple ─────────── */
+  --color-feel:            #7b9fd4;
+  --color-feel-muted:      #141c2e;
+
+  /* ── Shadows ─────────────────────────────────── */
+  --shadow-sm:  0 1px 3px oklch(0 0 0 / 0.35);
+  --shadow-md:  0 4px 16px oklch(0 0 0 / 0.45);
+  --shadow-lg:  0 12px 40px oklch(0 0 0 / 0.55);
+  --shadow-glow-amber: 0 0 20px oklch(from #e8a020 l c h / 0.25);
+
+  /* ── Pomodoro Phase Colors ───────────────────── */
+  --color-phase-work:       var(--color-accent);
+  --color-phase-break:      var(--color-success);
+  --color-phase-longbreak:  var(--color-feel);
+}
+
+
+/* ─────────────────────────────────────────────────────────
+   LIGHT MODE — "Parchment Focus"
+   Warm cream base, dark amber accent (readable in daylight)
+   ───────────────────────────────────────────────────────── */
+[data-theme="light"] {
+
+  --color-bg:              #f5f2ed;
+  --color-surface:         #faf8f4;
+  --color-surface-2:       #ffffff;
+  --color-surface-offset:  #ede9e2;
+  --color-surface-dynamic: #e4e0d8;
+  --color-divider:         #dcd8d0;
+  --color-border:          #ccc8c0;
+
+  --color-text:            #1c1a15;
+  --color-text-muted:      #6b6760;
+  --color-text-faint:      #aaa89f;
+  --color-text-inverse:    #ffffff;
+
+  --color-accent:          #b86e00;   /* deeper amber for light bg contrast */
+  --color-accent-hover:    #a05e00;
+  --color-accent-active:   #884e00;
+  --color-accent-muted:    #f5e8d0;
+  --color-accent-text:     #ffffff;
+
+  --color-success:         #2a7a6b;
+  --color-success-hover:   #1e6058;
+  --color-success-muted:   #d0ede9;
+
+  --color-danger:          #b54530;
+  --color-danger-hover:    #9b3828;
+  --color-danger-muted:    #f5ddd8;
+
+  --color-feel:            #5577b0;
+  --color-feel-muted:      #dde5f4;
+
+  --shadow-sm:  0 1px 3px oklch(0.2 0.02 60 / 0.10);
+  --shadow-md:  0 4px 16px oklch(0.2 0.02 60 / 0.12);
+  --shadow-lg:  0 12px 40px oklch(0.2 0.02 60 / 0.16);
+  --shadow-glow-amber: 0 0 20px oklch(from #b86e00 l c h / 0.18);
+
+  --color-phase-work:       var(--color-accent);
+  --color-phase-break:      var(--color-success);
+  --color-phase-longbreak:  var(--color-feel);
+}
+
+
+/* ─────────────────────────────────────────────────────────
+   FLUID TYPE SCALE (clamp-based)
+   Mobile-first: lower bound tuned for 375px screens
+   ───────────────────────────────────────────────────────── */
+:root {
+  /* Fonts */
+  --font-display: 'Cabinet Grotesk', 'Helvetica Neue', sans-serif;
+  --font-body:    'Satoshi', 'Inter', sans-serif;
+
+  /* Scale */
+  --text-xs:    clamp(0.75rem,  0.72rem + 0.2vw,  0.875rem);  /* 12→14px */
+  --text-sm:    clamp(0.875rem, 0.84rem + 0.3vw,  1rem);      /* 14→16px */
+  --text-base:  clamp(1rem,     0.96rem + 0.25vw, 1.125rem);  /* 16→18px */
+  --text-lg:    clamp(1.125rem, 1rem    + 0.7vw,  1.5rem);    /* 18→24px */
+  --text-xl:    clamp(1.5rem,   1.2rem  + 1.2vw,  2rem);      /* 24→32px */
+  --text-2xl:   clamp(2rem,     1.4rem  + 2vw,    2.75rem);   /* 32→44px */
+
+  /* ── 4px Spacing System ───────────────────────── */
+  --space-1:   0.25rem;   /*  4px */
+  --space-2:   0.5rem;    /*  8px */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+
+  /* ── Radius ─────────────────────────────────────── */
+  --radius-sm:   0.375rem;   /*  6px */
+  --radius-md:   0.625rem;   /* 10px */
+  --radius-lg:   1rem;       /* 16px */
+  --radius-xl:   1.5rem;     /* 24px */
+  --radius-full: 9999px;
+
+  /* ── Transitions ────────────────────────────────── */
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:   cubic-bezier(0.7,  0, 0.84, 0);
+  --ease-snap: cubic-bezier(0.34, 1.56, 0.64, 1); /* subtle overshoot */
+
+  --transition-fast:   140ms var(--ease-out);
+  --transition-base:   220ms var(--ease-out);
+  --transition-slow:   380ms var(--ease-out);
+
+  /* ── Layout ─────────────────────────────────────── */
+  --content-max:    480px;   /* max width on large phones / tablets */
+  --nav-height:     64px;    /* bottom nav bar */
+  --header-height:  56px;    /* top header */
+
+  /* ── Z-index ladder ─────────────────────────────── */
+  --z-base:    0;
+  --z-raised:  10;
+  --z-overlay: 100;
+  --z-modal:   200;
+  --z-toast:   300;
+  --z-nav:     400;
+}
+
+
+/* ─────────────────────────────────────────────────────────
+   RESET & BASE STYLES
+   ───────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  -webkit-text-size-adjust: none;
+  text-size-adjust: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+  /* Prevent pull-to-refresh interfering with app */
+  overscroll-behavior: none;
+}
+
+body {
+  min-height: 100dvh;          /* dynamic viewport — handles mobile browser chrome */
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  /* Prevent text selection on double-tap (feels more app-like) */
+  -webkit-tap-highlight-color: transparent;
+  /* Single scroll axis */
+  overflow-x: hidden;
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+ul[role="list"], ol[role="list"] { list-style: none; }
+
+input, button, textarea, select {
+  font: inherit;
+  color: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+  line-height: 1.2;
+}
+
+p, li {
+  text-wrap: pretty;
+  max-width: 68ch;
+}
+
+/* ── Interactive elements ──────────────────────── */
+a, button, [role="button"] {
+  transition:
+    color            var(--transition-fast),
+    background-color var(--transition-fast),
+    border-color     var(--transition-fast),
+    box-shadow       var(--transition-fast),
+    opacity          var(--transition-fast),
+    transform        var(--transition-fast);
+}
+
+button {
+  cursor: pointer;
+  background: none;
+  border: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Visible touch feedback */
+button:active,
+[role="button"]:active {
+  transform: scale(0.97);
+}
+
+/* ── Focus ring (keyboard nav) ─────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Text selection ────────────────────────────── */
+::selection {
+  background: color-mix(in oklch, var(--color-accent) 25%, transparent);
+  color: var(--color-text);
+}
+
+/* ── Scrollbar (thin, themed) ──────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: var(--radius-full);
+}
+
+/* ── Reduced motion ────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Table reset ───────────────────────────────── */
+table { border-collapse: collapse; width: 100%; }
+
+/* ── Accessibility helper ──────────────────────── */
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border-width: 0;
+}
+
+
+/* ─────────────────────────────────────────────────────────
+   UTILITY CLASSES (used across all components)
+   ───────────────────────────────────────────────────────── */
+
+/* Layout */
+.container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+/* Typography helpers */
+.text-xs     { font-size: var(--text-xs); }
+.text-sm     { font-size: var(--text-sm); }
+.text-base   { font-size: var(--text-base); }
+.text-lg     { font-size: var(--text-lg); }
+.text-xl     { font-size: var(--text-xl); }
+
+.text-muted  { color: var(--color-text-muted); }
+.text-faint  { color: var(--color-text-faint); }
+.text-accent { color: var(--color-accent); }
+.text-success{ color: var(--color-success); }
+.text-danger { color: var(--color-danger); }
+
+.font-display { font-family: var(--font-display); }
+.font-bold    { font-weight: 700; }
+.font-medium  { font-weight: 500; }
+
+/* Surfaces */
+.surface        { background: var(--color-surface); }
+.surface-2      { background: var(--color-surface-2); }
+.surface-offset { background: var(--color-surface-offset); }
+
+/* Divider */
+.divider {
+  height: 1px;
+  background: var(--color-divider);
+  border: none;
+}
+
+/* Flex helpers */
+.flex        { display: flex; }
+.flex-col    { display: flex; flex-direction: column; }
+.items-center{ align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-1 { gap: var(--space-1); }
+.gap-2 { gap: var(--space-2); }
+.gap-3 { gap: var(--space-3); }
+.gap-4 { gap: var(--space-4); }
+
+/* Spacing */
+.p-3  { padding: var(--space-3); }
+.p-4  { padding: var(--space-4); }
+.p-5  { padding: var(--space-5); }
+.p-6  { padding: var(--space-6); }
+.mt-4 { margin-top: var(--space-4); }
+.mb-4 { margin-bottom: var(--space-4); }
+
+/* Visibility */
+.hidden  { display: none !important; }
+.visible { display: block !important; }
+
+/* Shimmer skeleton loader */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-offset) 25%,
+    var(--color-surface-dynamic) 50%,
+    var(--color-surface-offset) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* Number ticker animation */
+@keyframes tick-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.tick-in { animation: tick-in 200ms var(--ease-out) both; }
+
+/* Fade in */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fade-in { animation: fade-in 300ms var(--ease-out) both; }
+
+/* Slide up (modal / sheet entry) */
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.slide-up { animation: slide-up 280ms var(--ease-out) both; }
