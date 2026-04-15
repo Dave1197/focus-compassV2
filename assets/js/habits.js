@@ -2,16 +2,18 @@
 /* ═══════════════════════════════════════════════════════════
    FOCUS COMPASS — Habits Module
    Handles: CRUD, daily checkbox logic, progress, rendering
+   Drag-to-reorder via SortableJS (must load before this file)
    Depends on: storage.js (must load first)
    ═══════════════════════════════════════════════════════════ */
 
 const Habits = (() => {
 
   // ── DOM refs (set on init) ──────────────────────────────
-  let _listEl        = null;  // .habit-list container
-  let _progressFill  = null;  // .habits-progress-fill
-  let _progressLabel = null;  // checked/total text
-  let _emptyState    = null;  // .habits-empty
+  let _listEl        = null;
+  let _progressFill  = null;
+  let _progressLabel = null;
+  let _emptyState    = null;
+  let _sortable      = null;  // SortableJS instance
 
   // Long-press state (for mobile edit/delete reveal)
   let _pressTimer    = null;
@@ -31,7 +33,7 @@ const Habits = (() => {
   // ── Bind buttons that exist in HTML (not per-habit) ─────
   function _bindStaticControls() {
 
-    // "Add habit" submit (the inline input row)
+    // "Add habit" submit
     const addForm = document.getElementById('habit-add-form');
     if (addForm) {
       addForm.addEventListener('submit', e => {
@@ -80,16 +82,19 @@ const Habits = (() => {
 
     // Empty state
     if (habitNames.length === 0) {
-      _listEl.innerHTML    = '';
+      _listEl.innerHTML = '';
       _emptyState?.classList.remove('hidden');
       _updateProgress(0, 0);
+      _destroySortable();
       return;
     }
 
     _emptyState?.classList.add('hidden');
 
     // Build list HTML
-    _listEl.innerHTML = habitNames.map(name => _habitItemHTML(name, !!todayMap[name])).join('');
+    _listEl.innerHTML = habitNames
+      .map(name => _habitItemHTML(name, !!todayMap[name]))
+      .join('');
 
     // Bind events to each item
     _listEl.querySelectorAll('.habit-item').forEach(_bindHabitItem);
@@ -97,6 +102,41 @@ const Habits = (() => {
     // Update progress bar
     const checked = Object.values(todayMap).filter(Boolean).length;
     _updateProgress(checked, habitNames.length);
+
+    // Initialise drag-to-reorder
+    _initSortable();
+  }
+
+  // ── Initialise SortableJS on the list ───────────────────
+  function _initSortable() {
+    _destroySortable(); // destroy previous instance first
+
+    if (!_listEl || typeof Sortable === 'undefined') return;
+
+    _sortable = Sortable.create(_listEl, {
+      handle:           '.habit-drag-handle',
+      animation:        150,
+      delay:            150,
+      delayOnTouchOnly: true,
+      ghostClass:       'habit-drag-ghost',
+      chosenClass:      'habit-drag-chosen',
+      dragClass:        'habit-drag-active',
+      onEnd() {
+        // Read new order from DOM and persist to Storage
+        const newOrder = [];
+        _listEl.querySelectorAll('.habit-item[data-habit]').forEach(el => {
+          newOrder.push(el.dataset.habit);
+        });
+        Storage.reorderHabits(newOrder);
+      }
+    });
+  }
+
+  function _destroySortable() {
+    if (_sortable) {
+      _sortable.destroy();
+      _sortable = null;
+    }
   }
 
   // ── Single habit item HTML ───────────────────────────────
@@ -108,7 +148,6 @@ const Habits = (() => {
         <polyline points="2,7 5.5,10.5 12,3.5"/>
       </svg>`;
 
-    // Escape name for data attribute
     const safeName = _escapeAttr(name);
 
     return `
@@ -118,6 +157,16 @@ const Habits = (() => {
            aria-label="${safeName}"
            data-habit="${safeName}"
            tabindex="0">
+
+        <span class="habit-drag-handle" aria-hidden="true" title="Hold to reorder">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2.5"
+               stroke-linecap="round">
+            <line x1="3" y1="7"  x2="21" y2="7"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="17" x2="21" y2="17"/>
+          </svg>
+        </span>
 
         <div class="habit-checkbox" aria-hidden="true">
           ${checkSVG}
@@ -154,14 +203,14 @@ const Habits = (() => {
   function _bindHabitItem(el) {
     const name = el.dataset.habit;
 
-    // ── Tap / click → toggle checkbox ──────────────────
+    // Tap / click → toggle checkbox
     el.addEventListener('click', e => {
-      // Don't toggle if user tapped an action button
-      if (e.target.closest('.habit-actions')) return;
+      if (e.target.closest('.habit-actions'))    return;
+      if (e.target.closest('.habit-drag-handle')) return;
       _toggleHabit(name, el);
     });
 
-    // ── Keyboard: Space/Enter → toggle ─────────────────
+    // Keyboard: Space/Enter → toggle
     el.addEventListener('keydown', e => {
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
@@ -169,25 +218,26 @@ const Habits = (() => {
       }
     });
 
-    // ── Long press → reveal edit/delete (mobile) ───────
-    el.addEventListener('pointerdown', () => {
+    // Long press → reveal edit/delete (mobile)
+    el.addEventListener('pointerdown', e => {
+      if (e.target.closest('.habit-drag-handle')) return;
       _pressTimer = setTimeout(() => {
         el.classList.add('show-actions');
         _pressTimer = null;
       }, LONG_PRESS_MS);
     });
 
-    el.addEventListener('pointerup',    _clearPress);
-    el.addEventListener('pointercancel',_clearPress);
-    el.addEventListener('pointermove',  _clearPress);
+    el.addEventListener('pointerup',     _clearPress);
+    el.addEventListener('pointercancel', _clearPress);
+    el.addEventListener('pointermove',   _clearPress);
 
-    // ── Edit button ─────────────────────────────────────
+    // Edit button
     el.querySelector('.btn-habit-edit')?.addEventListener('click', e => {
       e.stopPropagation();
       _openEditSheet(name);
     });
 
-    // ── Delete button ───────────────────────────────────
+    // Delete button
     el.querySelector('.btn-habit-delete')?.addEventListener('click', e => {
       e.stopPropagation();
       _confirmDelete(name);
@@ -204,9 +254,8 @@ const Habits = (() => {
   // ── Toggle a habit checkbox ──────────────────────────────
   function _toggleHabit(name, el) {
     const newState = Storage.toggleHabit(name);
-    if (newState === null) return; // habit not found
+    if (newState === null) return;
 
-    // Optimistic UI — no full re-render, just swap class
     if (newState) {
       el.classList.add('checked');
       el.setAttribute('aria-checked', 'true');
@@ -215,13 +264,11 @@ const Habits = (() => {
       el.setAttribute('aria-checked', 'false');
     }
 
-    // Update progress bar
     const todayMap = Storage.getTodayHabits();
     const checked  = Object.values(todayMap).filter(Boolean).length;
     const total    = Storage.getHabitsList().length;
     _updateProgress(checked, total);
 
-    // Haptic feedback if available
     if (navigator.vibrate) navigator.vibrate(newState ? 30 : 10);
   }
 
@@ -236,7 +283,6 @@ const Habits = (() => {
       `<span><strong>${checked}</strong> of ${total} done</span>` +
       `<span>${pct}%</span>`;
 
-    // Celebrate 100%
     if (checked > 0 && checked === total) {
       _celebrate();
     }
@@ -257,20 +303,17 @@ const Habits = (() => {
                 id="sheet-habit-input"
                 type="text"
                 value="${_escapeAttr(oldName)}"
-                maxlength="60"
                 autocomplete="off" />`,
       confirmLabel: 'Save',
       onOpen(sheetEl) {
-        // Auto-focus + select all
         const inp = sheetEl.querySelector('#sheet-habit-input');
         setTimeout(() => { inp?.focus(); inp?.select(); }, 120);
       },
       onConfirm(sheetEl) {
         const inp     = sheetEl.querySelector('#sheet-habit-input');
         const newName = inp?.value?.trim();
-        if (!newName) return false; // keep sheet open
-
-        if (newName === oldName) return true; // nothing changed
+        if (!newName) return false;
+        if (newName === oldName) return true;
 
         const ok = Storage.editHabit(oldName, newName);
         if (ok) {
@@ -300,13 +343,12 @@ const Habits = (() => {
     });
   }
 
-  // ── Public: re-sync habits list with today's map ─────────
-  // Called when a new day starts mid-session (edge case)
+  // ── Public: re-sync on new day ───────────────────────────
   function syncNewDay() {
     render();
   }
 
-  // ── Public: get summary object for Review / Dashboard ────
+  // ── Public: summary for Review / Dashboard ───────────────
   function getTodaySummary() {
     const names    = Storage.getHabitsList();
     const todayMap = Storage.getTodayHabits();
@@ -319,8 +361,8 @@ const Habits = (() => {
     return {
       items,
       checked,
-      total:  names.length,
-      pct:    names.length > 0 ? Math.round((checked / names.length) * 100) : 0
+      total: names.length,
+      pct:   names.length > 0 ? Math.round((checked / names.length) * 100) : 0
     };
   }
 
