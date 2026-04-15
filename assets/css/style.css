@@ -1762,6 +1762,35 @@
 }
 
 
+/* Drag handle */
+.habit-drag-handle {
+  display: flex;
+  align-items: center;
+  padding: var(--space-2);
+  color: var(--color-text-faint);
+  cursor: grab;
+  flex-shrink: 0;
+  touch-action: none;
+}
+
+.habit-drag-handle:active { cursor: grabbing; }
+
+/* Ghost (the placeholder while dragging) */
+.habit-drag-ghost {
+  opacity: 0.35;
+  background: var(--color-surface-offset) !important;
+  border-radius: var(--radius-md);
+}
+
+/* The item being dragged */
+.habit-drag-chosen {
+  background: var(--color-surface-2);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--radius-md);
+  opacity: 0.95;
+}
+
+
 /* ═══════════════════════════════════════════════════
    POMODORO — SMOOTH RING ANIMATION
 ═══════════════════════════════════════════════════ */
