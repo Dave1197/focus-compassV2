@@ -465,7 +465,7 @@ const UI = (() => {
     }));
 
     return {
-      items:   items,
+      items:   items.filter(i => i.checked),  // ← only checked habits
       total:   items.length,
       checked: items.filter(i => i.checked).length
     };
