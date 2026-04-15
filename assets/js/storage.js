@@ -187,6 +187,20 @@ const Storage = {
     return this.save();
   },
 
+  reorderHabits(newOrder) {
+    if (!Array.isArray(newOrder)) return false;
+    const current = this._data?.habitsList || [];
+    if (!current.length) return false;
+    const valid = newOrder.filter(name => current.includes(name));
+    current.forEach(name => {
+      if (!valid.includes(name)) valid.push(name);
+    });
+    this._data.habitsList = valid;
+    this._save();
+    return true;
+  },
+
+
   editHabit(oldName, newName) {
     const n = String(newName).trim();
     if (!n || this._data.settings.habits.includes(n)) return false;
