@@ -546,18 +546,15 @@
 .habit-item {
   display: flex;
   align-items: flex-start;
-  gap: var(--space-3);
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);   /* was space-4 space-5 */
   background: var(--color-surface);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-3) var(--space-4);
-  min-height: 56px;
+  border-radius: var(--radius-lg);           /* was radius-xl */
   cursor: pointer;
-  transition:
-    background var(--transition-fast),
-    border-color var(--transition-fast),
-    transform var(--transition-fast);
-  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transition-interactive);
+  margin-bottom: var(--space-2);             /* was space-3 or space-4 */
+  min-height: unset;                         /* remove any fixed height */
 }
 
 .habit-item:active { transform: scale(0.985); }
@@ -569,12 +566,14 @@
 
 /* Custom checkbox */
 .habit-checkbox {
-  width: 26px;
-  height: 26px;
-  border-radius: var(--radius-md);
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 50%;
   border: 2px solid var(--color-border);
   background: var(--color-surface-2);
   flex-shrink: 0;
+  margin-top: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -608,19 +607,20 @@
 .habit-item.checked .habit-checkbox svg { opacity: 1; }
 
 .habit-name {
-  flex: 1;
+  font-family: 'Lora', Georgia, serif;    /* readable serif — already loaded */
+  font-size: 0.92rem;                     /* slightly smaller than before */
+  line-height: 1.5;
+  color: var(--color-text);
   white-space: normal;
   word-break: break-word;
-  font-size: var(--text-base);
-  font-weight: 500;
-  color: var(--color-text);
-  transition: color var(--transition-fast);
+  flex: 1;
+  padding-top: 2px;                       /* optical alignment with checkbox */
 }
 
 .habit-item.checked .habit-name {
   color: var(--color-text-muted);
   text-decoration: line-through;
-  text-decoration-color: var(--color-success);
+  text-decoration-color: var(--color-text-faint);
 }
 
 .habit-actions {
@@ -1764,9 +1764,9 @@
 
 /* Drag handle */
 .habit-drag-handle {
-  display: flex;
-  align-items: center;
-  padding: var(--space-2);
+  width: 20px;
+  min-width: 20px;
+  padding-top: 3px;
   color: var(--color-text-faint);
   cursor: grab;
   flex-shrink: 0;
