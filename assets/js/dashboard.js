@@ -228,7 +228,7 @@ const Dashboard = (() => {
     const feelData  = moodData.map(r => r.feel || null);
     const fearData  = moodData.map(r => r.fear || null);
 
-    const feelColor = _css('--color-accent');
+    const feelColor = '#7C3AED'; 
     const fearColor = _css('--color-danger');
     const feelMuted = _css('--color-accent-muted');
     const fearMuted = _css('--color-danger-muted');
